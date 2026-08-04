@@ -1,6 +1,6 @@
 "use client";
 
-import { type PointerEvent, useEffect, useRef, useState } from "react";
+import { type MouseEvent, type PointerEvent, useCallback, useEffect, useRef, useState } from "react";
 
 const navItems = [
   { label: "Work", href: "#work" },
@@ -184,19 +184,33 @@ function Starfield() {
         if (meteors[index].life > meteors[index].maxLife) meteors.splice(index, 1);
       }
 
-      if (!reducedMotion) frame = requestAnimationFrame(draw);
+      if (!reducedMotion && !document.hidden) frame = requestAnimationFrame(draw);
+      else frame = 0;
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(frame);
+        frame = 0;
+        return;
+      }
+
+      lastTime = performance.now();
+      if (!reducedMotion && frame === 0) frame = requestAnimationFrame(draw);
     };
 
     resize();
     window.addEventListener("resize", resize);
     window.addEventListener("pointermove", updatePointer, { passive: true });
+    document.addEventListener("visibilitychange", handleVisibilityChange);
     draw(0);
-    if (!reducedMotion) frame = requestAnimationFrame(draw);
+    if (!reducedMotion && !document.hidden) frame = requestAnimationFrame(draw);
 
     return () => {
       cancelAnimationFrame(frame);
       window.removeEventListener("resize", resize);
       window.removeEventListener("pointermove", updatePointer);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []);
 
@@ -206,7 +220,9 @@ function Starfield() {
 export default function Home() {
   const [activeSection, setActiveSection] = useState("work");
   const [menuOpen, setMenuOpen] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const scrollFrameRef = useRef<number | null>(null);
+  const navigationFrameRef = useRef<number | null>(null);
+  const progressBarRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const sections = Array.from(document.querySelectorAll<HTMLElement>("main section[id]"));
@@ -228,13 +244,24 @@ export default function Home() {
     document.documentElement.classList.add("has-motion");
 
     const updateScrollProgress = () => {
-      const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
-      setScrollProgress(scrollableHeight > 0 ? window.scrollY / scrollableHeight : 0);
+      if (scrollFrameRef.current !== null) return;
+
+      scrollFrameRef.current = requestAnimationFrame(() => {
+        const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = scrollableHeight > 0 ? window.scrollY / scrollableHeight : 0;
+        progressBarRef.current?.style.setProperty("width", `${Math.min(100, Math.max(0, progress * 100))}%`);
+        scrollFrameRef.current = null;
+      });
     };
 
     updateScrollProgress();
     window.addEventListener("scroll", updateScrollProgress, { passive: true });
-    return () => window.removeEventListener("scroll", updateScrollProgress);
+    window.addEventListener("resize", updateScrollProgress, { passive: true });
+    return () => {
+      if (scrollFrameRef.current !== null) cancelAnimationFrame(scrollFrameRef.current);
+      window.removeEventListener("scroll", updateScrollProgress);
+      window.removeEventListener("resize", updateScrollProgress);
+    };
   }, []);
 
   useEffect(() => {
@@ -253,6 +280,67 @@ export default function Home() {
     document.querySelectorAll<HTMLElement>("[data-reveal]").forEach((element) => revealObserver.observe(element));
     return () => revealObserver.disconnect();
   }, []);
+
+  const closeMenu = useCallback(() => setMenuOpen(false), []);
+
+  const scrollToSection = useCallback((id: string, updateHash = true) => {
+    const target = document.getElementById(id);
+    if (!target) return;
+
+    if (navigationFrameRef.current !== null) cancelAnimationFrame(navigationFrameRef.current);
+
+    const headerOffset = window.innerWidth <= 800 ? 74 : 80;
+    const targetY = Math.max(0, window.scrollY + target.getBoundingClientRect().top - headerOffset);
+    const startY = window.scrollY;
+    const distance = targetY - startY;
+
+    if (updateHash && window.location.hash !== `#${id}`) {
+      window.history.pushState(null, "", `#${id}`);
+    }
+
+    if (Math.abs(distance) < 2 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      window.scrollTo(0, targetY);
+      navigationFrameRef.current = null;
+      return;
+    }
+
+    const duration = Math.min(900, Math.max(350, Math.abs(distance) * 0.35));
+    const startTime = performance.now();
+    const animate = (now: number) => {
+      const progress = Math.min(1, (now - startTime) / duration);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      window.scrollTo(0, startY + distance * eased);
+
+      if (progress < 1) navigationFrameRef.current = requestAnimationFrame(animate);
+      else navigationFrameRef.current = null;
+    };
+
+    navigationFrameRef.current = requestAnimationFrame(animate);
+  }, []);
+
+  useEffect(() => {
+    const cancelNavigation = () => {
+      if (navigationFrameRef.current !== null) {
+        cancelAnimationFrame(navigationFrameRef.current);
+        navigationFrameRef.current = null;
+      }
+    };
+
+    const handlePopState = () => scrollToSection(window.location.hash.slice(1) || "top", false);
+    window.addEventListener("wheel", cancelNavigation, { passive: true });
+    window.addEventListener("touchstart", cancelNavigation, { passive: true });
+    window.addEventListener("popstate", handlePopState);
+
+    const initialHash = window.location.hash.slice(1);
+    if (initialHash) requestAnimationFrame(() => scrollToSection(initialHash, false));
+
+    return () => {
+      cancelNavigation();
+      window.removeEventListener("wheel", cancelNavigation);
+      window.removeEventListener("touchstart", cancelNavigation);
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [scrollToSection]);
 
   useEffect(() => {
     if (!window.matchMedia("(pointer: fine)").matches) return;
@@ -292,35 +380,48 @@ export default function Home() {
     event.currentTarget.style.removeProperty("--card-rotate-y");
   };
 
-  const closeMenu = () => setMenuOpen(false);
+  const handleSectionNavigation = useCallback((event: MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (!href.startsWith("#")) return;
+    event.preventDefault();
+    closeMenu();
+    scrollToSection(href.slice(1));
+  }, [closeMenu, scrollToSection]);
 
   return (
     <main>
       <Starfield />
       <header className="kinetic-header">
         <div className="header-inner">
-          <a className="kinetic-mark" href="#top" onClick={closeMenu} aria-label="Myeongseong Kim home">MK.</a>
+          <a className="kinetic-mark" href="#top" onClick={(event) => handleSectionNavigation(event, "#top")} aria-label="Myeongseong Kim home">MK.</a>
           <nav className={menuOpen ? "kinetic-nav is-open" : "kinetic-nav"} aria-label="Main navigation">
             {navItems.map((item) => (
               <a
                 className={activeSection === item.href.slice(1) ? "is-active" : ""}
                 href={item.href}
                 key={item.label}
-                onClick={closeMenu}
+                onClick={(event) => handleSectionNavigation(event, item.href)}
                 aria-current={activeSection === item.href.slice(1) ? "page" : undefined}
               >
                 {item.label}
               </a>
             ))}
+            <a
+              className={activeSection === "connect" ? "mobile-connect is-active" : "mobile-connect"}
+              href="#connect"
+              onClick={(event) => handleSectionNavigation(event, "#connect")}
+              aria-current={activeSection === "connect" ? "page" : undefined}
+            >
+              Connect
+            </a>
           </nav>
-          <a className="header-connect" href="#connect" onClick={closeMenu}>Connect</a>
+          <a className="header-connect" href="#connect" onClick={(event) => handleSectionNavigation(event, "#connect")}>Connect</a>
           <button className="menu-toggle" type="button" onClick={() => setMenuOpen((open) => !open)} aria-expanded={menuOpen} aria-label="Toggle navigation">
             <span>{menuOpen ? "×" : "☰"}</span>
           </button>
         </div>
       </header>
       <div className="scroll-progress" aria-hidden="true">
-        <span style={{ width: `${Math.min(100, Math.max(0, scrollProgress * 100))}%` }} />
+        <span ref={progressBarRef} />
       </div>
 
       <section className="kinetic-hero" id="top">
@@ -446,10 +547,10 @@ export default function Home() {
 
       <footer className="kinetic-footer">
         <div>
-          <a className="kinetic-mark footer-mark" href="#top">MK.</a>
+          <a className="kinetic-mark footer-mark" href="#top" onClick={(event) => handleSectionNavigation(event, "#top")}>MK.</a>
           <p>© 2026 Myeongseong Kim. Engineered with curiosity.</p>
         </div>
-        <a href="#top">Back to top ↑</a>
+        <a href="#top" onClick={(event) => handleSectionNavigation(event, "#top")}>Back to top ↑</a>
       </footer>
     </main>
   );

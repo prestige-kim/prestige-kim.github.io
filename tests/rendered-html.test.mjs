@@ -54,3 +54,12 @@ test("starter preview infrastructure is removed from the finished site", async (
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);
   await assert.rejects(access(new URL("app/_sites-preview", templateRoot)));
 });
+
+test("navigation has a cancellable scroll controller and mobile Connect entry", async () => {
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+
+  assert.match(page, /navigationFrameRef/);
+  assert.match(page, /window\.history\.pushState/);
+  assert.match(page, /handleSectionNavigation/);
+  assert.match(page, /className=\{activeSection === "connect" \? "mobile-connect is-active"/);
+});
