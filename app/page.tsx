@@ -1,7 +1,6 @@
 "use client";
 
 import { type MouseEvent, type PointerEvent, useCallback, useEffect, useRef, useState } from "react";
-import Image from "next/image";
 
 const navItems = [
   { label: "Work", href: "#work" },
@@ -490,17 +489,10 @@ export default function Home() {
             <div className="section-label"><span>03</span> {"//"} TIMELINE</div>
             <figure className="timeline-portrait" data-reveal>
               <div className="portrait-frame">
-                <Image
-                  src="/profile/temporary-profile.jpg"
-                  alt="Temporary profile image"
-                  fill
-                  sizes="(max-width: 800px) 220px, 270px"
-                />
+                {/* GitHub Pages serves this static asset directly. */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/profile/temporary-profile.jpg" alt="Temporary profile image" />
               </div>
-              <figcaption>
-                <span className="mono-label">TEMPORARY AVATAR</span>
-                <small>A placeholder until the right portrait arrives.</small>
-              </figcaption>
             </figure>
           </div>
           <div className="section-main">

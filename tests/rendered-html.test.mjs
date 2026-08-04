@@ -65,4 +65,5 @@ test("navigation has a cancellable scroll controller and mobile Connect entry", 
   assert.match(page, /id="timeline"/);
   assert.match(page, /TIMELINE/);
   assert.match(page, /temporary-profile\.jpg/);
+  assert.doesNotMatch(page, /TEMPORARY AVATAR|A placeholder until the right portrait arrives/);
 });
