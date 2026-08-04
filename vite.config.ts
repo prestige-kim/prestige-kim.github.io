@@ -10,10 +10,12 @@ const { d1, r2 } = hostingConfig;
 
 // macOS Seatbelt blocks FSEvents, so Codex previews need polling for HMR.
 const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === "seatbelt";
+const localCompatibilityDate = process.env.NODE_ENV === "development" ? "2026-05-22" : "2026-08-04";
 
 const localBindingConfig = {
   main: "./worker/index.ts",
-  compatibility_date: "2026-08-04",
+  compatibility_date: localCompatibilityDate,
+  ...(process.env.NODE_ENV === "development" ? { compatibility_flags: ["nodejs_compat"] } : {}),
   d1_databases: d1
     ? [
         {
@@ -52,6 +54,7 @@ export default defineConfig(async () => {
       sites(),
       cloudflare({
         viteEnvironment: { name: "rsc", childEnvironments: ["ssr"] },
+        inspectorPort: false,
         config: localBindingConfig,
       }),
     ],
