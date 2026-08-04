@@ -36,6 +36,10 @@ test("server-renders the personal portfolio", async () => {
   assert.match(html, /Handong Global University/);
   assert.match(html, /Impactive-AI/);
   assert.match(html, /Google AI Agent Challenge 2026/);
+  assert.match(html, /SPOTLINE/);
+  assert.match(html, /ML MODELING/);
+  assert.match(html, /ML Paper Curator &amp; Learning Assistant/);
+  assert.match(html, /PROJECT BRIEF/);
   assert.match(html, /proudchris@icloud\.com/);
   assert.doesNotMatch(html, /Your site is taking shape|codex-preview|react-loading-skeleton/i);
 });
@@ -65,5 +69,9 @@ test("navigation has a cancellable scroll controller and mobile Connect entry", 
   assert.match(page, /id="timeline"/);
   assert.match(page, /TIMELINE/);
   assert.match(page, /temporary-profile\.jpg/);
+  assert.match(page, /openProject/);
+  assert.match(page, /id="research"/);
+  assert.match(page, /Analysis_of_ML_Papers/);
+  assert.match(page, /SPOTLINE_statistical_analysis_model/);
   assert.doesNotMatch(page, /TEMPORARY AVATAR|A placeholder until the right portrait arrives/);
 });

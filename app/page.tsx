@@ -5,28 +5,60 @@ import { type MouseEvent, type PointerEvent, useCallback, useEffect, useRef, use
 const navItems = [
   { label: "Work", href: "#work" },
   { label: "Timeline", href: "#timeline" },
+  { label: "Research", href: "#research" },
   { label: "Archive", href: "#archive" },
   { label: "About", href: "#about" },
 ];
 
-const focusAreas = [
+type Project = {
+  slug: string;
+  index: string;
+  label: string;
+  title: string;
+  summary: string;
+  detail: string;
+  role: string;
+  stack: string[];
+  highlights: string[];
+  href: string;
+};
+
+const projects: Project[] = [
+  {
+    slug: "spotline",
+    index: "01",
+    label: "STATISTICAL MODEL / 2026",
+    title: "SPOTLINE",
+    summary: "Forecasting tomorrow's restaurant visitors with a leakage-aware ridge regression model.",
+    detail: "A small but practical forecasting study for estimating the next day's restaurant visitors from weather, calendar, and recent demand signals.",
+    role: "Model design · feature engineering · evaluation",
+    stack: ["Python", "Pandas", "scikit-learn", "Jupyter"],
+    highlights: ["Ridge Regression + GridSearchCV", "5-Fold Cross Validation", "Future-data leakage prevention", "MAE 5.96 · R² 0.6552"],
+    href: "https://github.com/prestige-kim/SPOTLINE_statistical_analysis_model",
+  },
+  {
+    slug: "ml-modeling",
+    index: "02",
+    label: "LEARNING SYSTEM / 2026",
+    title: "ML MODELING",
+    summary: "A structured modeling bootcamp built around independent problem solving.",
+    detail: "A living learning system for practicing the full modeling loop: understand the data, define the prediction problem, build a baseline, evaluate, improve, and interpret.",
+    role: "Curriculum architecture · modeling practice · progress tracking",
+    stack: ["Python", "Jupyter", "scikit-learn", "Git"],
+    highlights: ["Problem-first modeling workflow", "Automated coaching rules", "Exercise and progress tracking", "Notes that preserve reusable concepts"],
+    href: "https://github.com/prestige-kim/ML_Modeling",
+  },
+];
+
+const researchEntries = [
   {
     index: "01",
-    label: "AI / SYSTEMS",
-    title: "Artificial Intelligence",
-    detail: "Turning emerging capabilities into software people can actually use.",
-  },
-  {
-    index: "02",
-    label: "ML / SIGNAL",
-    title: "Machine Learning",
-    detail: "Learning from data with curiosity, discipline, and a bias toward clarity.",
-  },
-  {
-    index: "03",
-    label: "METHOD / SOLVE",
-    title: "Problem Solving",
-    detail: "Breaking complex questions into smaller, more useful next steps.",
+    label: "KNOWLEDGE SYSTEM / ONGOING",
+    title: "ML Paper Curator & Learning Assistant",
+    summary: "A research log for turning machine learning papers into reusable knowledge.",
+    detail: "The project organizes paper discovery, candidate filtering, prioritization, approval, analysis, and knowledge updates into one learning workflow.",
+    highlights: ["Economy Mode for limited reading time", "Batch-based paper processing", "papers / knowledge / reports / prompts", "Learning roadmap built from connected notes"],
+    href: "https://github.com/prestige-kim/Analysis_of_ML_Papers",
   },
 ];
 
@@ -220,6 +252,7 @@ function Starfield() {
 export default function Home() {
   const [activeSection, setActiveSection] = useState("work");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const scrollFrameRef = useRef<number | null>(null);
   const navigationFrameRef = useRef<number | null>(null);
   const progressBarRef = useRef<HTMLSpanElement>(null);
@@ -361,6 +394,39 @@ export default function Home() {
     };
   }, []);
 
+  useEffect(() => {
+    const handleProjectHistory = () => {
+      const slug = window.location.hash.startsWith("#project/") ? window.location.hash.slice("#project/".length) : "";
+      setSelectedProject(projects.find((project) => project.slug === slug) ?? null);
+    };
+
+    handleProjectHistory();
+    window.addEventListener("popstate", handleProjectHistory);
+    window.addEventListener("hashchange", handleProjectHistory);
+    return () => {
+      window.removeEventListener("popstate", handleProjectHistory);
+      window.removeEventListener("hashchange", handleProjectHistory);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!selectedProject) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        window.history.back();
+      }
+    };
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selectedProject]);
+
   const handleCardPointerMove = (event: PointerEvent<HTMLElement>) => {
     const bounds = event.currentTarget.getBoundingClientRect();
     const x = ((event.clientX - bounds.left) / bounds.width) * 100;
@@ -378,6 +444,16 @@ export default function Home() {
     event.currentTarget.style.removeProperty("--card-y");
     event.currentTarget.style.removeProperty("--card-rotate-x");
     event.currentTarget.style.removeProperty("--card-rotate-y");
+  };
+
+  const openProject = (project: Project) => {
+    setSelectedProject(project);
+    window.history.pushState(null, "", `#project/${project.slug}`);
+  };
+
+  const closeProject = () => {
+    if (window.location.hash.startsWith("#project/")) window.history.back();
+    else setSelectedProject(null);
   };
 
   const handleSectionNavigation = useCallback((event: MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -460,26 +536,34 @@ export default function Home() {
       </section>
 
       <section className="kinetic-section work-section" id="work" data-reveal>
-        <div className="section-rule-label"><span>02</span> {"//"} FOCUS AREAS</div>
-        <div className="focus-grid">
-          {focusAreas.map((area, index) => (
-            <article
-              className={`kinetic-card card-${index + 1}`}
-              key={area.index}
+        <div className="section-rule-label"><span>02</span> {"//"} SELECTED WORK</div>
+        <div className="project-grid">
+          {projects.map((project) => (
+            <button
+              className="kinetic-card project-card"
+              key={project.slug}
+              type="button"
+              onClick={() => openProject(project)}
               onPointerMove={handleCardPointerMove}
               onPointerLeave={resetCardPointer}
+              aria-label={`Open details for ${project.title}`}
             >
               <span className="card-peel" aria-hidden="true" />
               <div className="card-topline">
-                <span className="mono-label">{area.index}</span>
-                <span className="card-tag">{area.label}</span>
+                <span className="mono-label">{project.index}</span>
+                <span className="card-tag">{project.label}</span>
               </div>
               <div className="card-bottomline">
-                <h3>{area.title}</h3>
-                <p>{area.detail}</p>
+                <h3>{project.title}</h3>
+                <p>{project.summary}</p>
+                <span className="project-card-cta">VIEW PROJECT BRIEF ↗</span>
               </div>
-            </article>
+            </button>
           ))}
+        </div>
+        <div className="work-signal">
+          <span className="mono-label"><span>FOCUS</span> / AI · ML · PRACTICAL SYSTEMS</span>
+          <p>Two selected repositories, documented as working evidence rather than a list of tools.</p>
         </div>
       </section>
 
@@ -514,9 +598,34 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="kinetic-section research-section" id="research" data-reveal>
+        <div className="section-grid">
+          <div className="section-label"><span>04</span> {"//"} RESEARCH</div>
+          <div className="section-main">
+            <h2>Following the signal from paper to practice.</h2>
+            <div className="research-list">
+              {researchEntries.map((entry) => (
+                <article className="research-entry" key={entry.title}>
+                  <div className="research-entry-topline">
+                    <span className="mono-label">{entry.index} / {entry.label}</span>
+                    <a href={entry.href} target="_blank" rel="noreferrer">SOURCE ↗</a>
+                  </div>
+                  <h3>{entry.title}</h3>
+                  <p>{entry.summary}</p>
+                  <p className="research-detail">{entry.detail}</p>
+                  <ul>
+                    {entry.highlights.map((highlight) => <li key={highlight}>{highlight}</li>)}
+                  </ul>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="kinetic-section archive-section" id="archive" data-reveal>
         <div className="archive-grid">
-          <div className="section-label"><span>04</span> {"//"} ARCHIVE</div>
+          <div className="section-label"><span>05</span> {"//"} ARCHIVE</div>
           <div className="archive-content">
             <div className="archive-block" data-reveal>
               <span className="mono-label">RECOGNITION</span>
@@ -539,7 +648,7 @@ export default function Home() {
       <section className="connect-panel" id="connect">
         <div className="connect-panel-inner">
           <div>
-            <span className="mono-label">05 // CONNECT</span>
+            <span className="mono-label">06 // CONNECT</span>
             <h2>Let&apos;s make<br /><em>something useful.</em></h2>
           </div>
           <div className="connect-links">
@@ -553,6 +662,41 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {selectedProject && (
+        <div className="project-dialog-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) closeProject(); }}>
+          <section className="project-dialog" role="dialog" aria-modal="true" aria-labelledby="project-dialog-title">
+            <div className="project-dialog-header">
+              <span className="mono-label"><span>{selectedProject.index}</span> {"//"} PROJECT BRIEF</span>
+              <button type="button" className="project-dialog-close" onClick={closeProject} aria-label="Close project details">×</button>
+            </div>
+            <div className="project-dialog-body">
+              <span className="mono-label">{selectedProject.label}</span>
+              <h2 id="project-dialog-title">{selectedProject.title}</h2>
+              <p className="project-dialog-lede">{selectedProject.detail}</p>
+              <div className="project-dialog-meta">
+                <div>
+                  <span className="mono-label">ROLE</span>
+                  <strong>{selectedProject.role}</strong>
+                </div>
+                <div>
+                  <span className="mono-label">STACK</span>
+                  <strong>{selectedProject.stack.join(" · ")}</strong>
+                </div>
+              </div>
+              <div className="project-dialog-highlights">
+                <span className="mono-label">KEY SIGNALS</span>
+                <ul>
+                  {selectedProject.highlights.map((highlight) => <li key={highlight}>{highlight}</li>)}
+                </ul>
+              </div>
+              <a className="project-dialog-source" href={selectedProject.href} target="_blank" rel="noreferrer">
+                OPEN GITHUB REPOSITORY <span>↗</span>
+              </a>
+            </div>
+          </section>
+        </div>
+      )}
 
       <footer className="kinetic-footer">
         <div>
