@@ -1,10 +1,11 @@
 "use client";
 
 import { type MouseEvent, type PointerEvent, useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 const navItems = [
   { label: "Work", href: "#work" },
-  { label: "Labs", href: "#labs" },
+  { label: "Timeline", href: "#timeline" },
   { label: "Archive", href: "#archive" },
   { label: "About", href: "#about" },
 ];
@@ -483,9 +484,25 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="kinetic-section labs-section" id="labs" data-reveal>
+      <section className="kinetic-section timeline-section" id="timeline" data-reveal>
         <div className="section-grid">
-          <div className="section-label"><span>03</span> {"//"} LABS</div>
+          <div className="timeline-sidebar">
+            <div className="section-label"><span>03</span> {"//"} TIMELINE</div>
+            <figure className="timeline-portrait" data-reveal>
+              <div className="portrait-frame">
+                <Image
+                  src="/profile/temporary-profile.jpg"
+                  alt="Temporary profile image"
+                  fill
+                  sizes="(max-width: 800px) 220px, 270px"
+                />
+              </div>
+              <figcaption>
+                <span className="mono-label">TEMPORARY AVATAR</span>
+                <small>A placeholder until the right portrait arrives.</small>
+              </figcaption>
+            </figure>
+          </div>
           <div className="section-main">
             <div className="timeline-list">
               <div className="timeline-row" data-reveal>

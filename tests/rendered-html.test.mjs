@@ -62,4 +62,7 @@ test("navigation has a cancellable scroll controller and mobile Connect entry", 
   assert.match(page, /window\.history\.pushState/);
   assert.match(page, /handleSectionNavigation/);
   assert.match(page, /className=\{activeSection === "connect" \? "mobile-connect is-active"/);
+  assert.match(page, /id="timeline"/);
+  assert.match(page, /TIMELINE/);
+  assert.match(page, /temporary-profile\.jpg/);
 });
