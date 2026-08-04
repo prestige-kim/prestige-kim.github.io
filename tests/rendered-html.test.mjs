@@ -73,5 +73,8 @@ test("navigation has a cancellable scroll controller and mobile Connect entry", 
   assert.match(page, /id="research"/);
   assert.match(page, /Analysis_of_ML_Papers/);
   assert.match(page, /SPOTLINE_statistical_analysis_model/);
+  assert.match(page, /setLanguage\("ko"\)/);
+  assert.match(page, /AI로 유용한/);
+  assert.match(page, /기술의 가능성과 사람의 직관 사이를 연결합니다/);
   assert.doesNotMatch(page, /TEMPORARY AVATAR|A placeholder until the right portrait arrives/);
 });

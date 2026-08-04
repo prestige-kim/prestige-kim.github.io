@@ -2,13 +2,15 @@
 
 import { type MouseEvent, type PointerEvent, useCallback, useEffect, useRef, useState } from "react";
 
+type Language = "en" | "ko";
+
 const navItems = [
-  { label: "Work", href: "#work" },
-  { label: "Timeline", href: "#timeline" },
-  { label: "Research", href: "#research" },
-  { label: "Archive", href: "#archive" },
-  { label: "About", href: "#about" },
-];
+  { key: "work", href: "#work" },
+  { key: "timeline", href: "#timeline" },
+  { key: "research", href: "#research" },
+  { key: "archive", href: "#archive" },
+  { key: "about", href: "#about" },
+] as const;
 
 type Project = {
   slug: string;
@@ -21,6 +23,13 @@ type Project = {
   stack: string[];
   highlights: string[];
   href: string;
+  ko: {
+    label: string;
+    summary: string;
+    detail: string;
+    role: string;
+    highlights: string[];
+  };
 };
 
 const projects: Project[] = [
@@ -35,6 +44,13 @@ const projects: Project[] = [
     stack: ["Python", "Pandas", "scikit-learn", "Jupyter"],
     highlights: ["Ridge Regression + GridSearchCV", "5-Fold Cross Validation", "Future-data leakage prevention", "MAE 5.96 · R² 0.6552"],
     href: "https://github.com/prestige-kim/SPOTLINE_statistical_analysis_model",
+    ko: {
+      label: "통계 모델 / 2026",
+      summary: "데이터 누수를 차단한 릿지 회귀 모델로 내일의 식당 방문객 수를 예측합니다.",
+      detail: "날씨, 달력, 최근 방문 수요를 바탕으로 식당의 다음 날 방문객 수를 추정하는 실용적인 예측 연구입니다.",
+      role: "모델 설계 · 피처 엔지니어링 · 평가",
+      highlights: ["릿지 회귀 + GridSearchCV", "5-Fold 교차 검증", "미래 데이터 누수 방지", "MAE 5.96 · R² 0.6552"],
+    },
   },
   {
     slug: "ml-modeling",
@@ -47,6 +63,13 @@ const projects: Project[] = [
     stack: ["Python", "Jupyter", "scikit-learn", "Git"],
     highlights: ["Problem-first modeling workflow", "Automated coaching rules", "Exercise and progress tracking", "Notes that preserve reusable concepts"],
     href: "https://github.com/prestige-kim/ML_Modeling",
+    ko: {
+      label: "학습 시스템 / 2026",
+      summary: "독립적인 문제 해결을 중심으로 설계한 구조화된 머신러닝 학습 시스템입니다.",
+      detail: "데이터 이해, 예측 문제 정의, 기준 모델 구축, 평가, 개선, 해석까지 모델링의 전체 흐름을 연습하는 살아 있는 학습 저장소입니다.",
+      role: "커리큘럼 구조 설계 · 모델링 실습 · 진도 기록",
+      highlights: ["문제 정의 중심의 모델링 흐름", "자동화된 코칭 규칙", "Exercise와 진도 추적", "재사용 가능한 개념을 남기는 노트"],
+    },
   },
 ];
 
@@ -59,8 +82,44 @@ const researchEntries = [
     detail: "The project organizes paper discovery, candidate filtering, prioritization, approval, analysis, and knowledge updates into one learning workflow.",
     highlights: ["Economy Mode for limited reading time", "Batch-based paper processing", "papers / knowledge / reports / prompts", "Learning roadmap built from connected notes"],
     href: "https://github.com/prestige-kim/Analysis_of_ML_Papers",
+    ko: {
+      label: "지식 관리 시스템 / 진행 중",
+      title: "ML 논문 큐레이터 & 학습 보조 시스템",
+      summary: "머신러닝 논문을 재사용 가능한 지식으로 바꾸는 연구 기록입니다.",
+      detail: "논문 발견, 후보 필터링, 우선순위화, 승인, 분석, 지식 업데이트를 하나의 학습 흐름으로 연결합니다.",
+      highlights: ["제한된 읽기 시간을 위한 Economy Mode", "배치 단위 논문 처리", "papers / knowledge / reports / prompts", "연결된 노트로 만드는 학습 로드맵"],
+    },
   },
 ];
+
+const siteCopy = {
+  en: {
+    nav: { work: "Work", timeline: "Timeline", research: "Research", archive: "Archive", about: "About", connect: "Connect", main: "Main navigation" },
+    hero: { signal: "LIVE SIGNAL", status: "CURIOUS / BUILDING", scroll: "SCROLL", intro: "An AI developer exploring the space between machine learning, practical software, and better ways to solve hard problems.", korean: "AI 아이디어를 실제로 작동하는 소프트웨어로 만듭니다." },
+    about: { label: "CONTEXT", title: "Bridging the gap between raw capability and human intuition.", first: "I care about the moment an abstract AI idea becomes something a person can actually use. My work starts with technical curiosity and ends with a practical question: does this make the problem easier?", second: "새로운 기술을 배우는 데서 멈추지 않고, 누군가에게 도움이 되는 형태로 구현하는 과정을 좋아합니다." },
+    work: { label: "SELECTED WORK", focus: "FOCUS", focusValue: "AI · ML · PRACTICAL SYSTEMS", note: "Two selected repositories, documented as working evidence rather than a list of tools.", cta: "VIEW PROJECT BRIEF ↗", aria: "Open details for" },
+    timeline: { label: "TIMELINE", current: "CURRENT / 2026", intern: "Data Search Intern", education: "EDUCATION", major: "AI Computer Engineering", activity: "ACTIVITY", lab: "T-LAB", labDetail: "Technology Startup Advanced Lab", university: "Handong Global University", profileAlt: "Temporary profile image" },
+    research: { label: "RESEARCH", title: "Following the signal from paper to practice.", source: "SOURCE ↗" },
+    archive: { label: "ARCHIVE", recognition: "RECOGNITION", award: "Excellence Award · 우수상", problemSolving: "PROBLEM SOLVING", practice: "A record of steady practice.", manifesto: "MANIFESTO", manifestoText: "Design is not just how it looks and feels. It is how a technical system becomes clear enough to trust." },
+    connect: { label: "CONNECT", title: "Let's make", emphasis: "something useful." },
+    language: { label: "Language" },
+    dialog: { brief: "PROJECT BRIEF", close: "Close project details", role: "ROLE", stack: "STACK", signals: "KEY SIGNALS", source: "OPEN GITHUB REPOSITORY" },
+    footer: { text: "© 2026 Myeongseong Kim. Engineered with curiosity.", back: "Back to top ↑" },
+  },
+  ko: {
+    nav: { work: "작업", timeline: "타임라인", research: "연구", archive: "아카이브", about: "소개", connect: "연결", main: "주요 메뉴" },
+    hero: { signal: "현재 신호", status: "호기심 / 만드는 중", scroll: "스크롤", intro: "머신러닝과 실용적인 소프트웨어 사이를 탐구하며, 어려운 문제를 더 나은 방식으로 풀어가는 AI 개발자입니다.", korean: "AI 아이디어를 실제로 작동하는 소프트웨어로 만듭니다." },
+    about: { label: "소개", title: "기술의 가능성과 사람의 직관 사이를 연결합니다.", first: "추상적인 AI 아이디어가 실제로 누군가가 사용할 수 있는 형태가 되는 순간에 관심이 있습니다. 기술적 호기심에서 시작해 ‘이것이 문제를 더 쉽게 만드는가?’라는 실용적인 질문으로 작업을 이어갑니다.", second: "새로운 기술을 배우는 데서 멈추지 않고, 누군가에게 도움이 되는 형태로 구현하는 과정을 좋아합니다." },
+    work: { label: "선택한 작업", focus: "집중 영역", focusValue: "AI · ML · 실용적인 시스템", note: "도구 목록이 아니라 실제로 작업한 증거가 되도록 두 개의 리포지토리를 기록했습니다.", cta: "프로젝트 브리프 보기 ↗", aria: "상세 내용 열기" },
+    timeline: { label: "타임라인", current: "현재 / 2026", intern: "데이터 검색 인턴", education: "학력", major: "AI 컴퓨터공학", activity: "활동", lab: "T-LAB", labDetail: "Technology Startup Advanced Lab", university: "한동글로벌대학교", profileAlt: "임시 프로필 이미지" },
+    research: { label: "연구", title: "논문에서 실천으로 이어지는 신호를 따라갑니다.", source: "원문 ↗" },
+    archive: { label: "기록", recognition: "수상", award: "Excellence Award · 우수상", problemSolving: "문제 해결", practice: "꾸준한 연습의 기록입니다.", manifesto: "매니페스토", manifestoText: "디자인은 단지 보이고 느껴지는 방식이 아닙니다. 기술 시스템을 신뢰할 수 있을 만큼 명확하게 만드는 방식입니다." },
+    connect: { label: "연결", title: "유용한 것을", emphasis: "함께 만들어봐요." },
+    language: { label: "Language" },
+    dialog: { brief: "프로젝트 브리프", close: "프로젝트 상세 닫기", role: "역할", stack: "기술 스택", signals: "핵심 포인트", source: "GitHub 리포지토리 열기" },
+    footer: { text: "© 2026 Myeongseong Kim. 호기심으로 설계합니다.", back: "맨 위로 ↑" },
+  },
+} as const;
 
 const links = [
   { label: "GitHub", value: "@prestige-kim", href: "https://github.com/prestige-kim" },
@@ -250,12 +309,18 @@ function Starfield() {
 }
 
 export default function Home() {
+  const [language, setLanguage] = useState<Language>("en");
   const [activeSection, setActiveSection] = useState("work");
   const [menuOpen, setMenuOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const scrollFrameRef = useRef<number | null>(null);
   const navigationFrameRef = useRef<number | null>(null);
   const progressBarRef = useRef<HTMLSpanElement>(null);
+  const t = siteCopy[language];
+
+  useEffect(() => {
+    document.documentElement.lang = language;
+  }, [language]);
 
   useEffect(() => {
     const sections = Array.from(document.querySelectorAll<HTMLElement>("main section[id]"));
@@ -456,6 +521,12 @@ export default function Home() {
     else setSelectedProject(null);
   };
 
+  const selectedProjectCopy = selectedProject
+    ? language === "ko"
+      ? { ...selectedProject, ...selectedProject.ko }
+      : selectedProject
+    : null;
+
   const handleSectionNavigation = useCallback((event: MouseEvent<HTMLAnchorElement>, href: string) => {
     if (!href.startsWith("#")) return;
     event.preventDefault();
@@ -469,16 +540,16 @@ export default function Home() {
       <header className="kinetic-header">
         <div className="header-inner">
           <a className="kinetic-mark" href="#top" onClick={(event) => handleSectionNavigation(event, "#top")} aria-label="Myeongseong Kim home">MK.</a>
-          <nav className={menuOpen ? "kinetic-nav is-open" : "kinetic-nav"} aria-label="Main navigation">
+          <nav className={menuOpen ? "kinetic-nav is-open" : "kinetic-nav"} aria-label={t.nav.main}>
             {navItems.map((item) => (
               <a
                 className={activeSection === item.href.slice(1) ? "is-active" : ""}
                 href={item.href}
-                key={item.label}
+                key={item.key}
                 onClick={(event) => handleSectionNavigation(event, item.href)}
                 aria-current={activeSection === item.href.slice(1) ? "page" : undefined}
               >
-                {item.label}
+                {t.nav[item.key]}
               </a>
             ))}
             <a
@@ -487,10 +558,15 @@ export default function Home() {
               onClick={(event) => handleSectionNavigation(event, "#connect")}
               aria-current={activeSection === "connect" ? "page" : undefined}
             >
-              Connect
+              {t.nav.connect}
             </a>
           </nav>
-          <a className="header-connect" href="#connect" onClick={(event) => handleSectionNavigation(event, "#connect")}>Connect</a>
+          <a className="header-connect" href="#connect" onClick={(event) => handleSectionNavigation(event, "#connect")}>{t.nav.connect}</a>
+          <div className="language-switcher" role="group" aria-label={t.language.label}>
+            <button type="button" className={language === "en" ? "is-active" : ""} onClick={() => setLanguage("en")} aria-pressed={language === "en"}>EN</button>
+            <span aria-hidden="true">/</span>
+            <button type="button" className={language === "ko" ? "is-active" : ""} onClick={() => setLanguage("ko")} aria-pressed={language === "ko"}>KR</button>
+          </div>
           <button className="menu-toggle" type="button" onClick={() => setMenuOpen((open) => !open)} aria-expanded={menuOpen} aria-label="Toggle navigation">
             <span>{menuOpen ? "×" : "☰"}</span>
           </button>
@@ -504,19 +580,19 @@ export default function Home() {
         <div className="hero-frame">
           <div className="hero-content reveal-on-load">
             <p className="mono-label">MYEONGSEONG KIM <span>/</span> 김명성</p>
-            <h1>Building useful<br />things with <em>AI.</em></h1>
-            <p className="hero-intro">An AI developer exploring the space between machine learning, practical software, and better ways to solve hard problems.</p>
-            <p className="hero-korean">AI 아이디어를 실제로 작동하는 소프트웨어로 만듭니다.</p>
+            <h1>{language === "ko" ? <>AI로 유용한<br />것을 만듭니다.</> : <>Building useful<br />things with <em>AI.</em></>}</h1>
+            <p className="hero-intro">{t.hero.intro}</p>
+            <p className="hero-korean">{t.hero.korean}</p>
           </div>
           <div className="hero-signal" aria-hidden="true">
             <div className="signal-orbit"><span /></div>
             <div className="signal-copy">
-              <span className="mono-label">LIVE SIGNAL</span>
-              <strong>CURIOUS / BUILDING</strong>
+              <span className="mono-label">{t.hero.signal}</span>
+              <strong>{t.hero.status}</strong>
             </div>
           </div>
           <div className="hero-footer-note">
-            <span className="mono-label">SCROLL</span>
+            <span className="mono-label">{t.hero.scroll}</span>
             <span className="scroll-arrow" aria-hidden="true">↓</span>
           </div>
         </div>
@@ -524,74 +600,77 @@ export default function Home() {
 
       <section className="kinetic-section context-section" id="about" data-reveal>
         <div className="section-grid">
-          <div className="section-label"><span>01</span> {"//"} CONTEXT</div>
+          <div className="section-label"><span>01</span> {"//"} {t.about.label}</div>
           <div className="section-main">
-            <h2>Bridging the gap between raw capability and human intuition.</h2>
+            <h2>{t.about.title}</h2>
             <div className="copy-columns">
-              <p>I care about the moment an abstract AI idea becomes something a person can actually use. My work starts with technical curiosity and ends with a practical question: does this make the problem easier?</p>
-              <p>새로운 기술을 배우는 데서 멈추지 않고, 누군가에게 도움이 되는 형태로 구현하는 과정을 좋아합니다.</p>
+              <p>{t.about.first}</p>
+              <p>{t.about.second}</p>
             </div>
           </div>
         </div>
       </section>
 
       <section className="kinetic-section work-section" id="work" data-reveal>
-        <div className="section-rule-label"><span>02</span> {"//"} SELECTED WORK</div>
+        <div className="section-rule-label"><span>02</span> {"//"} {t.work.label}</div>
         <div className="project-grid">
-          {projects.map((project) => (
-            <button
-              className="kinetic-card project-card"
-              key={project.slug}
-              type="button"
-              onClick={() => openProject(project)}
-              onPointerMove={handleCardPointerMove}
-              onPointerLeave={resetCardPointer}
-              aria-label={`Open details for ${project.title}`}
-            >
-              <span className="card-peel" aria-hidden="true" />
-              <div className="card-topline">
-                <span className="mono-label">{project.index}</span>
-                <span className="card-tag">{project.label}</span>
-              </div>
-              <div className="card-bottomline">
-                <h3>{project.title}</h3>
-                <p>{project.summary}</p>
-                <span className="project-card-cta">VIEW PROJECT BRIEF ↗</span>
-              </div>
-            </button>
-          ))}
+          {projects.map((project) => {
+            const projectCopy = language === "ko" ? project.ko : project;
+            return (
+              <button
+                className="kinetic-card project-card"
+                key={project.slug}
+                type="button"
+                onClick={() => openProject(project)}
+                onPointerMove={handleCardPointerMove}
+                onPointerLeave={resetCardPointer}
+                aria-label={`${t.work.aria}: ${project.title}`}
+              >
+                <span className="card-peel" aria-hidden="true" />
+                <div className="card-topline">
+                  <span className="mono-label">{project.index}</span>
+                  <span className="card-tag">{projectCopy.label}</span>
+                </div>
+                <div className="card-bottomline">
+                  <h3>{project.title}</h3>
+                  <p>{projectCopy.summary}</p>
+                  <span className="project-card-cta">{t.work.cta}</span>
+                </div>
+              </button>
+            );
+          })}
         </div>
         <div className="work-signal">
-          <span className="mono-label"><span>FOCUS</span> / AI · ML · PRACTICAL SYSTEMS</span>
-          <p>Two selected repositories, documented as working evidence rather than a list of tools.</p>
+          <span className="mono-label"><span>{t.work.focus}</span> / {t.work.focusValue}</span>
+          <p>{t.work.note}</p>
         </div>
       </section>
 
       <section className="kinetic-section timeline-section" id="timeline" data-reveal>
         <div className="section-grid">
           <div className="timeline-sidebar">
-            <div className="section-label"><span>03</span> {"//"} TIMELINE</div>
+            <div className="section-label"><span>03</span> {"//"} {t.timeline.label}</div>
             <figure className="timeline-portrait" data-reveal>
               <div className="portrait-frame">
                 {/* GitHub Pages serves this static asset directly. */}
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/profile/temporary-profile.jpg" alt="Temporary profile image" />
+                <img src="/profile/temporary-profile.jpg" alt={t.timeline.profileAlt} />
               </div>
             </figure>
           </div>
           <div className="section-main">
             <div className="timeline-list">
               <div className="timeline-row" data-reveal>
-                <span className="mono-label">CURRENT / 2026</span>
-                <div><strong>Data Search Intern</strong><small>Impactive-AI · 2026.06 — 08</small></div>
+                <span className="mono-label">{t.timeline.current}</span>
+                <div><strong>{t.timeline.intern}</strong><small>Impactive-AI · 2026.06 — 08</small></div>
               </div>
               <div className="timeline-row" data-reveal>
-                <span className="mono-label">EDUCATION</span>
-                <div><strong>AI Computer Engineering</strong><small>Handong Global University</small></div>
+                <span className="mono-label">{t.timeline.education}</span>
+                <div><strong>{t.timeline.major}</strong><small>{t.timeline.university}</small></div>
               </div>
               <div className="timeline-row" data-reveal>
-                <span className="mono-label">ACTIVITY</span>
-                <div><strong>T-LAB</strong><small>Technology Startup Advanced Lab</small></div>
+                <span className="mono-label">{t.timeline.activity}</span>
+                <div><strong>{t.timeline.lab}</strong><small>{t.timeline.labDetail}</small></div>
               </div>
             </div>
           </div>
@@ -600,24 +679,27 @@ export default function Home() {
 
       <section className="kinetic-section research-section" id="research" data-reveal>
         <div className="section-grid">
-          <div className="section-label"><span>04</span> {"//"} RESEARCH</div>
+          <div className="section-label"><span>04</span> {"//"} {t.research.label}</div>
           <div className="section-main">
-            <h2>Following the signal from paper to practice.</h2>
+            <h2>{t.research.title}</h2>
             <div className="research-list">
-              {researchEntries.map((entry) => (
+              {researchEntries.map((entry) => {
+                const entryCopy = language === "ko" ? entry.ko : entry;
+                return (
                 <article className="research-entry" key={entry.title}>
                   <div className="research-entry-topline">
-                    <span className="mono-label">{entry.index} / {entry.label}</span>
-                    <a href={entry.href} target="_blank" rel="noreferrer">SOURCE ↗</a>
+                    <span className="mono-label">{entry.index} / {entryCopy.label}</span>
+                    <a href={entry.href} target="_blank" rel="noreferrer">{t.research.source}</a>
                   </div>
-                  <h3>{entry.title}</h3>
-                  <p>{entry.summary}</p>
-                  <p className="research-detail">{entry.detail}</p>
+                  <h3>{entryCopy.title}</h3>
+                  <p>{entryCopy.summary}</p>
+                  <p className="research-detail">{entryCopy.detail}</p>
                   <ul>
-                    {entry.highlights.map((highlight) => <li key={highlight}>{highlight}</li>)}
+                    {entryCopy.highlights.map((highlight) => <li key={highlight}>{highlight}</li>)}
                   </ul>
                 </article>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>
@@ -625,21 +707,21 @@ export default function Home() {
 
       <section className="kinetic-section archive-section" id="archive" data-reveal>
         <div className="archive-grid">
-          <div className="section-label"><span>05</span> {"//"} ARCHIVE</div>
+          <div className="section-label"><span>05</span> {"//"} {t.archive.label}</div>
           <div className="archive-content">
             <div className="archive-block" data-reveal>
-              <span className="mono-label">RECOGNITION</span>
+              <span className="mono-label">{t.archive.recognition}</span>
               <strong>Google AI Agent Challenge 2026</strong>
-              <small>Excellence Award · 우수상</small>
+              <small>{t.archive.award}</small>
             </div>
             <div className="archive-block" data-reveal>
-              <span className="mono-label">PROBLEM SOLVING</span>
+              <span className="mono-label">{t.archive.problemSolving}</span>
               <strong>Solved.ac — Gold V</strong>
-              <small>A record of steady practice.</small>
+              <small>{t.archive.practice}</small>
             </div>
             <div className="archive-block archive-note" data-reveal>
-              <span className="mono-label">MANIFESTO</span>
-              <p>Design is not just how it looks and feels. It is how a technical system becomes clear enough to trust.</p>
+              <span className="mono-label">{t.archive.manifesto}</span>
+              <p>{t.archive.manifestoText}</p>
             </div>
           </div>
         </div>
@@ -648,8 +730,8 @@ export default function Home() {
       <section className="connect-panel" id="connect">
         <div className="connect-panel-inner">
           <div>
-            <span className="mono-label">06 // CONNECT</span>
-            <h2>Let&apos;s make<br /><em>something useful.</em></h2>
+            <span className="mono-label">06 {"//"} {t.connect.label}</span>
+            <h2>{t.connect.title}<br /><em>{t.connect.emphasis}</em></h2>
           </div>
           <div className="connect-links">
             {links.map((link) => (
@@ -667,31 +749,31 @@ export default function Home() {
         <div className="project-dialog-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) closeProject(); }}>
           <section className="project-dialog" role="dialog" aria-modal="true" aria-labelledby="project-dialog-title">
             <div className="project-dialog-header">
-              <span className="mono-label"><span>{selectedProject.index}</span> {"//"} PROJECT BRIEF</span>
-              <button type="button" className="project-dialog-close" onClick={closeProject} aria-label="Close project details">×</button>
+              <span className="mono-label"><span>{selectedProject.index}</span> {"//"} {t.dialog.brief}</span>
+              <button type="button" className="project-dialog-close" onClick={closeProject} aria-label={t.dialog.close}>×</button>
             </div>
             <div className="project-dialog-body">
-              <span className="mono-label">{selectedProject.label}</span>
-              <h2 id="project-dialog-title">{selectedProject.title}</h2>
-              <p className="project-dialog-lede">{selectedProject.detail}</p>
+              <span className="mono-label">{selectedProjectCopy?.label}</span>
+              <h2 id="project-dialog-title">{selectedProjectCopy?.title}</h2>
+              <p className="project-dialog-lede">{selectedProjectCopy?.detail}</p>
               <div className="project-dialog-meta">
                 <div>
-                  <span className="mono-label">ROLE</span>
-                  <strong>{selectedProject.role}</strong>
+                  <span className="mono-label">{t.dialog.role}</span>
+                  <strong>{selectedProjectCopy?.role}</strong>
                 </div>
                 <div>
-                  <span className="mono-label">STACK</span>
+                  <span className="mono-label">{t.dialog.stack}</span>
                   <strong>{selectedProject.stack.join(" · ")}</strong>
                 </div>
               </div>
               <div className="project-dialog-highlights">
-                <span className="mono-label">KEY SIGNALS</span>
+                <span className="mono-label">{t.dialog.signals}</span>
                 <ul>
-                  {selectedProject.highlights.map((highlight) => <li key={highlight}>{highlight}</li>)}
+                  {selectedProjectCopy?.highlights.map((highlight) => <li key={highlight}>{highlight}</li>)}
                 </ul>
               </div>
               <a className="project-dialog-source" href={selectedProject.href} target="_blank" rel="noreferrer">
-                OPEN GITHUB REPOSITORY <span>↗</span>
+                {t.dialog.source} <span>↗</span>
               </a>
             </div>
           </section>
@@ -701,9 +783,9 @@ export default function Home() {
       <footer className="kinetic-footer">
         <div>
           <a className="kinetic-mark footer-mark" href="#top" onClick={(event) => handleSectionNavigation(event, "#top")}>MK.</a>
-          <p>© 2026 Myeongseong Kim. Engineered with curiosity.</p>
+          <p>{t.footer.text}</p>
         </div>
-        <a href="#top" onClick={(event) => handleSectionNavigation(event, "#top")}>Back to top ↑</a>
+        <a href="#top" onClick={(event) => handleSectionNavigation(event, "#top")}>{t.footer.back}</a>
       </footer>
     </main>
   );

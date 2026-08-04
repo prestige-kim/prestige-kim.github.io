@@ -67,6 +67,9 @@ button { font: inherit; }
 .kinetic-nav a.is-active { border-bottom: 2px solid var(--lime); padding-bottom: 7px; }
 .header-connect { border: 1px solid var(--line); padding: 10px 23px; color: var(--text); }
 .header-connect:hover { border-color: var(--lime); background: var(--lime); color: var(--ink); }
+.language-switcher { display: flex; align-items: center; gap: 5px; margin-left: 18px; color: var(--muted-dark); font-family: var(--font-mono), "JetBrains Mono", monospace; font-size: 10px; font-weight: 700; letter-spacing: .06em; }
+.language-switcher button { border: 0; background: transparent; padding: 4px 2px; color: inherit; font: inherit; cursor: pointer; }
+.language-switcher button:hover, .language-switcher button:focus-visible, .language-switcher button.is-active { color: var(--lime); }
 .menu-toggle { display: none; margin-left: auto; border: 0; background: transparent; color: var(--text); font-size: 22px; line-height: 1; }
 
 .kinetic-hero { min-height: 100vh; padding: 64px 64px 0; }
@@ -207,6 +210,7 @@ html.has-motion .timeline-row[data-reveal]:nth-child(3), html.has-motion .archiv
   .kinetic-nav .mobile-connect { display: block; }
   .kinetic-nav a.is-active { padding-bottom: 13px; }
   .header-connect { display: none; }
+  .language-switcher { margin-left: 12px; }
   .menu-toggle { display: block; }
   .kinetic-hero { min-height: auto; padding: 58px 20px 0; }
   .hero-frame { min-height: calc(100svh - 58px); padding: 40px 20px 65px; }
