@@ -76,5 +76,18 @@ test("navigation has a cancellable scroll controller and mobile Connect entry", 
   assert.match(page, /setLanguage\("ko"\)/);
   assert.match(page, /AI로 유용한/);
   assert.match(page, /기술의 가능성과 사람의 직관 사이를 연결합니다/);
+  assert.match(page, /selectedTimelineItem/);
+  assert.match(page, /timeline-focus-backdrop/);
+  assert.match(page, /timelineItems\.map/);
+  assert.match(page, /impactive-ai-logo\.png/);
+  assert.match(page, /navigateTimeline/);
+  assert.match(page, /timeline-focus-nav/);
+  assert.match(page, /navLabel: "인턴"/);
+  assert.match(page, /navLabel: "수상경력"/);
+  assert.match(page, /navLabel: "학력"/);
+  assert.match(page, /navLabel: "학부 연구생"/);
+  assert.ok(page.indexOf('id: "current"') < page.indexOf('id: "recognition"'));
+  assert.ok(page.indexOf('id: "recognition"') < page.indexOf('id: "education"'));
+  assert.ok(page.indexOf('id: "education"') < page.indexOf('id: "activity"'));
   assert.doesNotMatch(page, /TEMPORARY AVATAR|A placeholder until the right portrait arrives/);
 });

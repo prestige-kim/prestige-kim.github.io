@@ -32,6 +32,20 @@ type Project = {
   };
 };
 
+type TimelineItem = {
+  id: string;
+  index: string;
+  navLabel: string;
+  label: string;
+  title: string;
+  meta: string;
+  ko: {
+    label: string;
+    title: string;
+    meta: string;
+  };
+};
+
 const projects: Project[] = [
   {
     slug: "spotline",
@@ -92,15 +106,54 @@ const researchEntries = [
   },
 ];
 
+const timelineItems: TimelineItem[] = [
+  {
+    id: "current",
+    index: "01",
+    navLabel: "인턴",
+    label: "CURRENT / 2026",
+    title: "Data Search Intern",
+    meta: "Impactive-AI · 2026.06 — 08",
+    ko: { label: "현재 / 2026", title: "데이터 검색 인턴", meta: "Impactive-AI · 2026.06 — 08" },
+  },
+  {
+    id: "recognition",
+    index: "02",
+    navLabel: "수상경력",
+    label: "RECOGNITION",
+    title: "Google AI Agent Challenge 2026",
+    meta: "Excellence Award · 우수상",
+    ko: { label: "수상", title: "Google AI Agent Challenge 2026", meta: "Excellence Award · 우수상" },
+  },
+  {
+    id: "education",
+    index: "03",
+    navLabel: "학력",
+    label: "EDUCATION",
+    title: "AI Computer Engineering",
+    meta: "Handong Global University",
+    ko: { label: "학력", title: "AI 컴퓨터공학", meta: "한동글로벌대학교" },
+  },
+  {
+    id: "activity",
+    index: "04",
+    navLabel: "학부 연구생",
+    label: "ACTIVITY",
+    title: "T-LAB",
+    meta: "Technology Startup Advanced Lab",
+    ko: { label: "활동", title: "T-LAB", meta: "Technology Startup Advanced Lab" },
+  },
+];
+
 const siteCopy = {
   en: {
     nav: { work: "Work", timeline: "Timeline", research: "Research", archive: "Archive", about: "About", connect: "Connect", main: "Main navigation" },
     hero: { signal: "LIVE SIGNAL", status: "CURIOUS / BUILDING", scroll: "SCROLL", intro: "An AI developer exploring the space between machine learning, practical software, and better ways to solve hard problems.", korean: "AI 아이디어를 실제로 작동하는 소프트웨어로 만듭니다." },
     about: { label: "CONTEXT", title: "Bridging the gap between raw capability and human intuition.", first: "I care about the moment an abstract AI idea becomes something a person can actually use. My work starts with technical curiosity and ends with a practical question: does this make the problem easier?", second: "새로운 기술을 배우는 데서 멈추지 않고, 누군가에게 도움이 되는 형태로 구현하는 과정을 좋아합니다." },
     work: { label: "SELECTED WORK", focus: "FOCUS", focusValue: "AI · ML · PRACTICAL SYSTEMS", note: "Two selected repositories, documented as working evidence rather than a list of tools.", cta: "VIEW PROJECT BRIEF ↗", aria: "Open details for" },
-    timeline: { label: "TIMELINE", current: "CURRENT / 2026", intern: "Data Search Intern", education: "EDUCATION", major: "AI Computer Engineering", activity: "ACTIVITY", lab: "T-LAB", labDetail: "Technology Startup Advanced Lab", university: "Handong Global University", profileAlt: "Temporary profile image" },
+    timeline: { label: "TIMELINE", current: "CURRENT / 2026", intern: "Data Search Intern", education: "EDUCATION", major: "AI Computer Engineering", activity: "ACTIVITY", lab: "T-LAB", labDetail: "Technology Startup Advanced Lab", university: "Handong Global University", recognition: "RECOGNITION", award: "Google AI Agent Challenge 2026", awardDetail: "Excellence Award · 우수상", detailLabel: "DETAILS", detailsComing: "Detailed notes for this timeline entry will be added soon.", close: "Close timeline details", trigger: "Open timeline details", organization: "ORGANIZATION", previous: "PREVIOUS", next: "NEXT", profileAlt: "Temporary profile image" },
     research: { label: "RESEARCH", title: "Following the signal from paper to practice.", source: "SOURCE ↗" },
-    archive: { label: "ARCHIVE", recognition: "RECOGNITION", award: "Excellence Award · 우수상", problemSolving: "PROBLEM SOLVING", practice: "A record of steady practice.", manifesto: "MANIFESTO", manifestoText: "Design is not just how it looks and feels. It is how a technical system becomes clear enough to trust." },
+    archive: { label: "ARCHIVE", recognition: "AWARD DETAIL", award: "Google AI Agent Challenge 2026", awardDetail: "Excellence Award · 우수상. A selected recognition from the archive of work and learning.", problemSolving: "PROBLEM SOLVING", practice: "A record of steady practice.", manifesto: "MANIFESTO", manifestoText: "Design is not just how it looks and feels. It is how a technical system becomes clear enough to trust." },
     connect: { label: "CONNECT", title: "Let's make", emphasis: "something useful." },
     language: { label: "Language" },
     dialog: { brief: "PROJECT BRIEF", close: "Close project details", role: "ROLE", stack: "STACK", signals: "KEY SIGNALS", source: "OPEN GITHUB REPOSITORY" },
@@ -111,9 +164,9 @@ const siteCopy = {
     hero: { signal: "현재 신호", status: "호기심 / 만드는 중", scroll: "스크롤", intro: "머신러닝과 실용적인 소프트웨어 사이를 탐구하며, 어려운 문제를 더 나은 방식으로 풀어가는 AI 개발자입니다.", korean: "AI 아이디어를 실제로 작동하는 소프트웨어로 만듭니다." },
     about: { label: "소개", title: "기술의 가능성과 사람의 직관 사이를 연결합니다.", first: "추상적인 AI 아이디어가 실제로 누군가가 사용할 수 있는 형태가 되는 순간에 관심이 있습니다. 기술적 호기심에서 시작해 ‘이것이 문제를 더 쉽게 만드는가?’라는 실용적인 질문으로 작업을 이어갑니다.", second: "새로운 기술을 배우는 데서 멈추지 않고, 누군가에게 도움이 되는 형태로 구현하는 과정을 좋아합니다." },
     work: { label: "선택한 작업", focus: "집중 영역", focusValue: "AI · ML · 실용적인 시스템", note: "도구 목록이 아니라 실제로 작업한 증거가 되도록 두 개의 리포지토리를 기록했습니다.", cta: "프로젝트 브리프 보기 ↗", aria: "상세 내용 열기" },
-    timeline: { label: "타임라인", current: "현재 / 2026", intern: "데이터 검색 인턴", education: "학력", major: "AI 컴퓨터공학", activity: "활동", lab: "T-LAB", labDetail: "Technology Startup Advanced Lab", university: "한동글로벌대학교", profileAlt: "임시 프로필 이미지" },
+    timeline: { label: "타임라인", current: "현재 / 2026", intern: "데이터 검색 인턴", education: "학력", major: "AI 컴퓨터공학", activity: "활동", lab: "T-LAB", labDetail: "Technology Startup Advanced Lab", university: "한동글로벌대학교", recognition: "수상", award: "Google AI Agent Challenge 2026", awardDetail: "Excellence Award · 우수상", detailLabel: "세부 내용", detailsComing: "이 타임라인 항목의 상세 내용은 추후 추가할 예정입니다.", close: "타임라인 상세 닫기", trigger: "타임라인 상세 열기", organization: "소속", previous: "이전", next: "다음", profileAlt: "임시 프로필 이미지" },
     research: { label: "연구", title: "논문에서 실천으로 이어지는 신호를 따라갑니다.", source: "원문 ↗" },
-    archive: { label: "기록", recognition: "수상", award: "Excellence Award · 우수상", problemSolving: "문제 해결", practice: "꾸준한 연습의 기록입니다.", manifesto: "매니페스토", manifestoText: "디자인은 단지 보이고 느껴지는 방식이 아닙니다. 기술 시스템을 신뢰할 수 있을 만큼 명확하게 만드는 방식입니다." },
+    archive: { label: "기록", recognition: "수상 상세", award: "Google AI Agent Challenge 2026", awardDetail: "Excellence Award · 우수상. 작업과 배움의 기록 중 하나로 남긴 수상 이력입니다.", problemSolving: "문제 해결", practice: "꾸준한 연습의 기록입니다.", manifesto: "매니페스토", manifestoText: "디자인은 단지 보이고 느껴지는 방식이 아닙니다. 기술 시스템을 신뢰할 수 있을 만큼 명확하게 만드는 방식입니다." },
     connect: { label: "연결", title: "유용한 것을", emphasis: "함께 만들어봐요." },
     language: { label: "Language" },
     dialog: { brief: "프로젝트 브리프", close: "프로젝트 상세 닫기", role: "역할", stack: "기술 스택", signals: "핵심 포인트", source: "GitHub 리포지토리 열기" },
@@ -313,6 +366,7 @@ export default function Home() {
   const [activeSection, setActiveSection] = useState("work");
   const [menuOpen, setMenuOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [selectedTimelineItem, setSelectedTimelineItem] = useState<TimelineItem | null>(null);
   const scrollFrameRef = useRef<number | null>(null);
   const navigationFrameRef = useRef<number | null>(null);
   const progressBarRef = useRef<HTMLSpanElement>(null);
@@ -475,12 +529,12 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (!selectedProject) return;
+    if (!selectedProject && !selectedTimelineItem) return;
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        window.history.back();
-      }
+      if (event.key !== "Escape") return;
+      if (selectedTimelineItem) setSelectedTimelineItem(null);
+      else window.history.back();
     };
 
     const previousOverflow = document.body.style.overflow;
@@ -490,7 +544,7 @@ export default function Home() {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [selectedProject]);
+  }, [selectedProject, selectedTimelineItem]);
 
   const handleCardPointerMove = (event: PointerEvent<HTMLElement>) => {
     const bounds = event.currentTarget.getBoundingClientRect();
@@ -521,11 +575,28 @@ export default function Home() {
     else setSelectedProject(null);
   };
 
+  const openTimelineItem = (item: TimelineItem) => setSelectedTimelineItem(item);
+  const closeTimelineItem = () => setSelectedTimelineItem(null);
+  const navigateTimeline = (direction: -1 | 1) => {
+    if (!selectedTimelineItem) return;
+    const currentIndex = timelineItems.findIndex((item) => item.id === selectedTimelineItem.id);
+    const nextIndex = (currentIndex + direction + timelineItems.length) % timelineItems.length;
+    setSelectedTimelineItem(timelineItems[nextIndex]);
+  };
+
   const selectedProjectCopy = selectedProject
     ? language === "ko"
       ? { ...selectedProject, ...selectedProject.ko }
       : selectedProject
     : null;
+  const selectedTimelineCopy = selectedTimelineItem
+    ? language === "ko"
+      ? selectedTimelineItem.ko
+      : selectedTimelineItem
+    : null;
+  const selectedTimelineIndex = selectedTimelineItem ? timelineItems.findIndex((item) => item.id === selectedTimelineItem.id) : -1;
+  const previousTimelineItem = selectedTimelineIndex >= 0 ? timelineItems[(selectedTimelineIndex - 1 + timelineItems.length) % timelineItems.length] : null;
+  const nextTimelineItem = selectedTimelineIndex >= 0 ? timelineItems[(selectedTimelineIndex + 1) % timelineItems.length] : null;
 
   const handleSectionNavigation = useCallback((event: MouseEvent<HTMLAnchorElement>, href: string) => {
     if (!href.startsWith("#")) return;
@@ -656,22 +727,28 @@ export default function Home() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/profile/temporary-profile.jpg" alt={t.timeline.profileAlt} />
               </div>
+              <figcaption className="timeline-portrait-caption">Chris, 김명성</figcaption>
             </figure>
           </div>
           <div className="section-main">
             <div className="timeline-list">
-              <div className="timeline-row" data-reveal>
-                <span className="mono-label">{t.timeline.current}</span>
-                <div><strong>{t.timeline.intern}</strong><small>Impactive-AI · 2026.06 — 08</small></div>
-              </div>
-              <div className="timeline-row" data-reveal>
-                <span className="mono-label">{t.timeline.education}</span>
-                <div><strong>{t.timeline.major}</strong><small>{t.timeline.university}</small></div>
-              </div>
-              <div className="timeline-row" data-reveal>
-                <span className="mono-label">{t.timeline.activity}</span>
-                <div><strong>{t.timeline.lab}</strong><small>{t.timeline.labDetail}</small></div>
-              </div>
+              {timelineItems.map((item) => {
+                const itemCopy = language === "ko" ? item.ko : item;
+                return (
+                  <button
+                    className="timeline-row timeline-trigger"
+                    data-reveal
+                    key={item.id}
+                    type="button"
+                    onClick={() => openTimelineItem(item)}
+                    aria-label={`${t.timeline.trigger}: ${itemCopy.title}`}
+                  >
+                    <span className="mono-label">{itemCopy.label}</span>
+                    <div><strong>{itemCopy.title}</strong><small>{itemCopy.meta}</small></div>
+                    <span className="timeline-row-arrow" aria-hidden="true">↗</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -711,8 +788,8 @@ export default function Home() {
           <div className="archive-content">
             <div className="archive-block" data-reveal>
               <span className="mono-label">{t.archive.recognition}</span>
-              <strong>Google AI Agent Challenge 2026</strong>
-              <small>{t.archive.award}</small>
+              <strong>{t.archive.award}</strong>
+              <p className="archive-detail">{t.archive.awardDetail}</p>
             </div>
             <div className="archive-block" data-reveal>
               <span className="mono-label">{t.archive.problemSolving}</span>
@@ -744,6 +821,51 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {selectedTimelineItem && selectedTimelineCopy && (
+        <div className="timeline-focus-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) closeTimelineItem(); }}>
+          <section className="timeline-focus-panel" role="dialog" aria-modal="true" aria-labelledby="timeline-focus-title">
+            <div className="timeline-focus-header">
+              <span className="mono-label"><span>03</span> {"//"} {t.timeline.label}</span>
+              <button type="button" className="project-dialog-close" onClick={closeTimelineItem} aria-label={t.timeline.close}>×</button>
+            </div>
+            <div className="timeline-focus-body">
+              <figure className="timeline-focus-portrait">
+                <div className="portrait-frame">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/profile/temporary-profile.jpg" alt={t.timeline.profileAlt} />
+                </div>
+                <figcaption className="timeline-portrait-caption">Chris, 김명성</figcaption>
+              </figure>
+              <div className="timeline-focus-copy">
+                <div className="timeline-focus-copy-grid">
+                  <div>
+                    <span className="mono-label"><span>{selectedTimelineItem.index}</span> / {selectedTimelineCopy.label}</span>
+                    <h2 id="timeline-focus-title">{selectedTimelineCopy.title}</h2>
+                    <p className="timeline-focus-meta">{selectedTimelineCopy.meta}</p>
+                    <div className="timeline-focus-detail">
+                      <span className="mono-label">{t.timeline.detailLabel}</span>
+                      <p>{t.timeline.detailsComing}</p>
+                    </div>
+                  </div>
+                  {selectedTimelineItem.id === "current" && (
+                    <div className="timeline-focus-company">
+                      <span className="mono-label">{t.timeline.organization}</span>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src="/profile/impactive-ai-logo.png" alt="Impactive-AI logo" />
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="timeline-focus-nav" aria-label="Timeline item navigation">
+              <button type="button" onClick={() => navigateTimeline(-1)} aria-label={previousTimelineItem ? `${t.timeline.trigger}: ${previousTimelineItem.navLabel}` : t.timeline.previous}><span aria-hidden="true">←</span> {previousTimelineItem?.navLabel}</button>
+              <span>{selectedTimelineItem.index} / 04</span>
+              <button type="button" onClick={() => navigateTimeline(1)} aria-label={nextTimelineItem ? `${t.timeline.trigger}: ${nextTimelineItem.navLabel}` : t.timeline.next}>{nextTimelineItem?.navLabel} <span aria-hidden="true">→</span></button>
+            </div>
+          </section>
+        </div>
+      )}
 
       {selectedProject && (
         <div className="project-dialog-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) closeProject(); }}>
